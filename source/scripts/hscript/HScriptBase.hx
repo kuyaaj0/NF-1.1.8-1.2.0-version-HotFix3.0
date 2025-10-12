@@ -49,6 +49,15 @@ class HScriptBase
 		interp.variables.set('FlxTimer', flixel.util.FlxTimer);
 		interp.variables.set('FlxTween', flixel.tweens.FlxTween);
 		interp.variables.set('FlxEase', flixel.tweens.FlxEase);
+		// expose video-related classes to HScript
+		interp.variables.set('VideoSprite', backend.VideoSprite);
+		#if hxCodec
+		interp.variables.set('FlxVideo', hxcodec.flixel.FlxVideo);
+		#end
+		#if hxvlc
+		interp.variables.set('FlxVideoSprite', hxvlc.flixel.FlxVideoSprite);
+		#end
+		interp.variables.set('BlendMode', openfl.display.BlendMode);
 		interp.variables.set('PlayState', PlayState);
 		interp.variables.set('game', PlayState.instance);
 		interp.variables.set('Paths', Paths);
