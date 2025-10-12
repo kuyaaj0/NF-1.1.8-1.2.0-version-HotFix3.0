@@ -1,8 +1,6 @@
 package scripts.lua;
 
 #if LUA_ALLOWED
-//import llua.Lua;
-//import llua.LuaL;
 import modchart.Manager;
 import flixel.tweens.FlxEase;
 import flixel.FlxG;
@@ -13,38 +11,39 @@ class ModchartLua {
         if (Manager.instance == null)
             Manager.instance = new Manager();
 
-        // 🔹 Set a modifier instantly
-        Lua_helper.add_callback(lua, "setMod", function(name:String, value:Float) {
+        // 🔹 setMod(name, value)
+        lua.addLocalCallback('setMod', function(name:String, value:Float) {
             Manager.instance.setPercent(name, value);
         });
 
-        // 🔹 Ease a modifier
-        Lua_helper.add_callback(lua, "easeMod", function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
+        // 🔹 easeMod(name, beat, length, value, ease)
+        lua.addLocalCallback('easeMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
             var easeFunc = Reflect.field(FlxEase, ease);
             if (easeFunc == null) easeFunc = FlxEase.linear;
             Manager.instance.ease(name, beat, length, value, easeFunc);
         });
 
-        // 🔹 Add a value to a modifier
-        Lua_helper.add_callback(lua, "addMod", function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
+        // 🔹 addMod(name, beat, length, value, ease)
+        lua.addLocalCallback('addMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
             var easeFunc = Reflect.field(FlxEase, ease);
             if (easeFunc == null) easeFunc = FlxEase.linear;
             Manager.instance.add(name, beat, length, value, easeFunc);
         });
 
-        // 🔹 Trigger an event on a specific beat
-        Lua_helper.add_callback(lua, "callbackMod", function(beat:Float, funcName:String) {
+        // 🔹 callbackMod(beat, functionName)
+        lua.addLocalCallback('callbackMod', function(beat:Float, funcName:String) {
             Manager.instance.callback(beat, function(e) {
-                Lua_helper.callFunction(lua, funcName, []);
+                if (lua != null && lua.functions != null && lua.functions.exists(funcName))
+                    lua.call(funcName, []);
             });
         });
 
-        // 🔹 Reset a modifier
-        Lua_helper.add_callback(lua, "resetMod", function(name:String) {
+        // 🔹 resetMod(name)
+        lua.addLocalCallback('resetMod', function(name:String) {
             Manager.instance.setPercent(name, 0);
         });
 
-        FlxG.log.add("[ModchartLua] Functions registered.");
+        FlxG.log.add("[ModchartLua] Registered modchart functions successfully!");
     }
 }
 #end
