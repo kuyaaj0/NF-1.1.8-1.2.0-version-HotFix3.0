@@ -1090,8 +1090,14 @@ class PlayState extends MusicBeatState
 						canPause = true;
 					}); // 我日我不到啊但是还是写上吧（我总感觉psych这个是不是缺代码了） -狐月影
 
+					// Prevent countdown auto-start after cutscene
 					inCutscene = false;
-					startAndEnd();
+					// Call a Lua function instead (if it exists)
+					#if LUA_ALLOWED
+						for (script in PlayState.instance.luaArray)
+							if (script != null && script.lua != null && !script.closed)
+								Lua_helper.callFunction(script.lua, "onVideoFinished", []);
+					#end
 				}
 				videoCutscene.finishCallback = onVideoEnd;
 				videoCutscene.onSkip = onVideoEnd;
