@@ -57,7 +57,7 @@ class HScriptBase
 		#if hxvlc
 		interp.variables.set('FlxVideoSprite', hxvlc.flixel.FlxVideoSprite);
 		#end
-		interp.variables.set('BlendMode', openfl.display.BlendMode);
+		//interp.variables.set('BlendMode', openfl.display.BlendMode);
 		interp.variables.set('PlayState', PlayState);
 		interp.variables.set('game', PlayState.instance);
 		interp.variables.set('Paths', Paths);
