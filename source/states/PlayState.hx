@@ -1255,8 +1255,10 @@ class PlayState extends MusicBeatState
 			}
 			moveCameraSection();
 
-			
-            //callOnHScript('onModChartStart', [modchart]);
+			modchart = new Manager();
+			add(modchart);
+			callOnLuas('onModChartStart', [modchart]);
+            callOnHScript('onModChartStart', [modchart]);
             
 
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, function(tmr:FlxTimer)
