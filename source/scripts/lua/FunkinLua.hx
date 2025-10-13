@@ -1826,9 +1826,6 @@ class FunkinLua
 		#if HSCRIPT_ALLOWED
 		HScriptBase.implement(this);
 		#end
-		#if LUA_ALLOWED
-		ModchartLua.implement(lua);
-		#end
 		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(this); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
 		ReflectionFunctions.implement(this);
@@ -1837,6 +1834,9 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
+		#if LUA_ALLOWED
+		ModchartLua.implement(lua);
+		#end
 
 		try
 		{
