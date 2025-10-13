@@ -1050,77 +1050,74 @@ class PlayState extends MusicBeatState
 	public var videoCutscene:VideoSprite = null;
 
 	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true)
-	{
-		#if VIDEOS_ALLOWED
-		inCutscene = true;
-		canPause = false;
+{
+    #if VIDEOS_ALLOWED
+    inCutscene = true;
+    canPause = false;
 
-		var foundFile:Bool = false;
-		var fileName:String = Paths.video(name);
+    var fileName:String = Paths.video(name);
+    var foundFile:Bool = false;
 
-		#if sys
-		if (FileSystem.exists(fileName))
-		#else
-		if (OpenFlAssets.exists(fileName))
-		#end
-		foundFile = true;
+    #if sys
+    if (FileSystem.exists(fileName))
+    #else
+    if (OpenFlAssets.exists(fileName))
+    #end
+        foundFile = true;
 
-		if (foundFile)
-		{
-			videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop);
+    if (foundFile)
+    {
+        videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop);
+        add(videoCutscene);
 
-			// Finish callback
-			if (!forMidSong)
-			{
-				function onVideoEnd()
-				{
-					if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
-					{
-						moveCameraSection();
-						FlxG.camera.snapToTarget();
-					}
-					try
-					{
-						videoCutscene.pause();
-						videoCutscene.videoSprite.visible = false;
-						videoCutscene = null; // 不是哥们你这好像没起作用啊，得加点代码吧
-					}
-					new FlxTimer().start(0.25, function(tmr:FlxTimer)
-					{
-						canPause = true;
-					}); // 我日我不到啊但是还是写上吧（我总感觉psych这个是不是缺代码了） -狐月影
+        // ✅ Safe finish callback
+        videoCutscene.finishCallback = function()
+        {
+            trace('🎬 Video finished: ' + name);
+            if (videoCutscene != null)
+            {
+                try {
+                    if (videoCutscene.videoSprite != null)
+                    {
+                        videoCutscene.videoSprite.visible = false;
+                        videoCutscene.pause();
+                    }
+                } catch (e:Dynamic) {
+                    trace('⚠️ Video cleanup error: ' + e);
+                }
 
-					// Prevent countdown auto-start after cutscene
-					inCutscene = false;
-					// Call a Lua function instead (if it exists)
-					#if LUA_ALLOWED
-						for (script in PlayState.instance.luaArray)
-							if (script != null && script.lua != null && !script.closed)
-								Lua_helper.callFunction(script.lua, "onVideoFinished", []);
-					#end
-				}
-				videoCutscene.finishCallback = onVideoEnd;
-				videoCutscene.onSkip = onVideoEnd;
-			}
-			add(videoCutscene);
+                remove(videoCutscene, true);
+                videoCutscene = null;
+            }
 
-			if (playOnLoad)
-				videoCutscene.videoSprite.play();
-			return videoCutscene;
-		}
-		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-		else
-			addTextToDebug("Video not found: " + fileName, FlxColor.RED);
-		#else
-		else
-			FlxG.log.error("Video not found: " + fileName);
-		#end
-		#else
-		FlxG.log.warn('Platform not supported!');
-		startAndEnd();
-		#end
-		return null;
-	}
+            inCutscene = false;
+            canPause = true;
+            startAndEnd();
+        };
+
+        // ✅ Skip calls the same cleanup
+        videoCutscene.onSkip = videoCutscene.finishCallback;
+
+        if (playOnLoad)
+            videoCutscene.videoSprite.play();
+
+        return videoCutscene;
+    }
+    else
+    {
+        #if (LUA_ALLOWED || HSCRIPT_ALLOWED)
+        addTextToDebug("⚠️ Video not found: " + fileName, FlxColor.RED);
+        #else
+        FlxG.log.error("Video not found: " + fileName);
+        #end
+    }
+    #else
+    FlxG.log.warn('Platform not supported!');
+    startAndEnd();
+    #end
+
+    return null;
+}
 
 	function startAndEnd()
 	{
