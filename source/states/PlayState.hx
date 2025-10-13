@@ -1255,8 +1255,6 @@ class PlayState extends MusicBeatState
 			}
 			moveCameraSection();
 
-			modchart = new Manager();
-			add(modchart);
 			callOnLuas('onModChartStart', [modchart]);
             callOnHScript('onModChartStart', [modchart]);
             
