@@ -323,6 +323,8 @@ class PlayState extends MusicBeatState
 
 	var diffBotplay:Bool;
 
+	public var modchart:Manager;
+
 	public function new()
 	{
 		super();
@@ -1223,6 +1225,9 @@ class PlayState extends MusicBeatState
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
+
+			modchart = new Manager(); //目前版本的modchart有问题
+			addManager(modchart);
 
 			for (i in 0...playerStrums.length)
 			{
