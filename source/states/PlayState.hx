@@ -833,6 +833,18 @@ class PlayState extends MusicBeatState
 
 		if (eventNotes.length < 1)
 			checkEventNote();
+			
+	// === Initialize Modchart Manager ===
+	if (Manager.instance == null)
+	{
+	    Manager.instance = new Manager();
+	    addManager(Manager.instance);
+	    
+	}
+	
+	// === Fire Lua / HScript Modchart Start ===
+	callOnLuas('onModchartStart', [Manager.instance]);
+	callOnHScript('onModchartStart', [Manager.instance]);
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -2262,6 +2274,12 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 	override public function update(elapsed:Float)
 	{
+			// === Update the Modchart Manager ===
+			if (Manager.instance != null)
+			{
+			Manager.instance.update(elapsed);
+			}
+
 		if (ClientPrefs.data.pauseButton)
 		{
 			var Pressed:Bool = false;
@@ -2275,6 +2293,7 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 					&& touch.justPressed)
 					Pressed = true;
 			}
+			
 
 			if (Pressed && (startedCountdown && canPause))
 			{
@@ -4571,6 +4590,12 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 		}
 
 		lastStepHit = curStep;
+		
+		// === Call Modchart Step Hooks ===
+		callOnLuas('onStepHit', [curStep]);
+		callOnHScript('onStepHit', [curStep]);
+
+		
 		setOnScripts('curStep', curStep);
 		callOnScripts('onStepHit');
 	}
@@ -4598,6 +4623,10 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 		super.beatHit();
 		lastBeatHit = curBeat;
+
+		// === Call Modchart Beat Hooks ===
+		callOnLuas('onBeatHit', [curBeat]);
+		callOnHScript('onBeatHit', [curBeat]);
 
 		setOnScripts('curBeat', curBeat);
 		callOnScripts('onBeatHit');
