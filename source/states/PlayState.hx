@@ -322,6 +322,8 @@ class PlayState extends MusicBeatState
 	public var luaVirtualPad:FlxVirtualPad;
 
 	var diffBotplay:Bool;
+	
+	public var modchart:Manager;
 
 	public function new()
 	{
@@ -1236,6 +1238,10 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
+
+			modchart = new Manager(); //目前版本的modchart有问题
+			addManager(modchart);
+
 			for (i in 0...playerStrums.length)
 			{
 				setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
@@ -1267,8 +1273,6 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			}
 			moveCameraSection();
 			
-			modchart = new Manager();
-			add(modchart);
 			callOnLuas('onModChartStart', [modchart]);
             callOnHScript('onModChartStart', [modchart]);
             
