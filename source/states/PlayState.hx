@@ -323,8 +323,6 @@ class PlayState extends MusicBeatState
 
 	var diffBotplay:Bool;
 
-	public var modchart:Manager;
-
 	public function new()
 	{
 		super();
@@ -1051,14 +1049,14 @@ class PlayState extends MusicBeatState
 
 	public var videoCutscene:VideoSprite = null;
 
-	public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true)
+public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = true, loop:Bool = false, playOnLoad:Bool = true)
 {
     #if VIDEOS_ALLOWED
     inCutscene = true;
     canPause = false;
 
-    var fileName:String = Paths.video(name);
     var foundFile:Bool = false;
+    var fileName:String = Paths.video(name);
 
     #if sys
     if (FileSystem.exists(fileName))
@@ -1070,49 +1068,61 @@ class PlayState extends MusicBeatState
     if (foundFile)
     {
         videoCutscene = new VideoSprite(fileName, forMidSong, canSkip, loop);
-        add(videoCutscene);
 
-        // ✅ Safe finish callback
-        videoCutscene.finishCallback = function()
+        // Finish callback
+        if (!forMidSong)
         {
-            trace('🎬 Video finished: ' + name);
-            if (videoCutscene != null)
+            function onVideoEnd()
             {
-                try {
-                    if (videoCutscene.videoSprite != null)
-                    {
-                        videoCutscene.videoSprite.visible = false;
-                        videoCutscene.pause();
-                    }
-                } catch (e:Dynamic) {
-                    trace('⚠️ Video cleanup error: ' + e);
+                if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
+                {
+                    moveCameraSection();
+                    FlxG.camera.snapToTarget();
                 }
 
-                remove(videoCutscene, true);
-                videoCutscene = null;
+                try
+                {
+                    videoCutscene.pause();
+                    videoCutscene.videoSprite.visible = false;
+                    videoCutscene = null;
+                }
+                new FlxTimer().start(0.25, function(tmr:FlxTimer)
+                {
+                    canPause = true;
+                });
+
+                inCutscene = false;
+                startAndEnd();
             }
 
-            inCutscene = false;
-            canPause = true;
-            startAndEnd();
-        };
+            videoCutscene.finishCallback = onVideoEnd;
+            videoCutscene.onSkip = onVideoEnd;
 
-        // ✅ Skip calls the same cleanup
-        videoCutscene.onSkip = videoCutscene.finishCallback;
+            // ✅ Notify all Lua scripts that the video has finished
+            #if LUA_ALLOWED
+            for (lua in luaArray)
+            {
+                lua.call("onVideoFinished", [name]);
+            }
+            #end
+        }
+
+        add(videoCutscene);
 
         if (playOnLoad)
             videoCutscene.videoSprite.play();
 
         return videoCutscene;
     }
+
+    #if (LUA_ALLOWED || HSCRIPT_ALLOWED)
     else
-    {
-        #if (LUA_ALLOWED || HSCRIPT_ALLOWED)
-        addTextToDebug("⚠️ Video not found: " + fileName, FlxColor.RED);
-        #else
+        addTextToDebug("Video not found: " + fileName, FlxColor.RED);
+    #else
+    else
         FlxG.log.error("Video not found: " + fileName);
-        #end
-    }
+    #end
+
     #else
     FlxG.log.warn('Platform not supported!');
     startAndEnd();
@@ -1226,9 +1236,6 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-			modchart = new Manager(); //目前版本的modchart有问题
-			addManager(modchart);
-
 			for (i in 0...playerStrums.length)
 			{
 				setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
@@ -1259,7 +1266,9 @@ class PlayState extends MusicBeatState
 				return true;
 			}
 			moveCameraSection();
-
+			
+			modchart = new Manager();
+			add(modchart);
 			callOnLuas('onModChartStart', [modchart]);
             callOnHScript('onModChartStart', [modchart]);
             
@@ -2428,7 +2437,7 @@ class PlayState extends MusicBeatState
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-				notes.insert(0, dunceNote);
+				notes.insert(0, dunceNote); //待研究
 				dunceNote.spawned = true;
 
 				callOnLuas('onSpawnNote', [
