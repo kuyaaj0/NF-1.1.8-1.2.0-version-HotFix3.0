@@ -57,6 +57,8 @@ class FunkinLua
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
 
+		ModchartLua.implement(lua);
+
 		// trace('Lua version: ' + Lua.version());
 		// trace("LuaJIT version: " + Lua.versionJIT());
 
@@ -1834,9 +1836,6 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
-		#if LUA_ALLOWED
-		ModchartLua.implement(lua);
-		#end
 
 		try
 		{
