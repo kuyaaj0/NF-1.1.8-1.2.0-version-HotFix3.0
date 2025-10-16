@@ -4,59 +4,85 @@ package scripts.lua;
 import modchart.Manager;
 import flixel.tweens.FlxEase;
 import flixel.FlxG;
-import flixel.util.FlxColor;
 
 class ModchartLua {
     public static function implement(lua:Dynamic):Void {
-        // 🧱 Safety check first
         if (lua == null) {
-            FlxG.log.warn("[ModchartLua] Tried to initialize but Lua is null! Skipping...");
+            FlxG.log.warn("[ModchartLua] Skipped — Lua instance is null!");
             return;
         }
 
-        // ✅ Ensure Manager exists
+        // Ensure Manager singleton exists
         if (Manager.instance == null)
             Manager.instance = new Manager();
 
         try {
-            // 🔹 setMod(name, value)
-            lua.addLocalCallback('setMod', function(name:String, value:Float) {
-                Manager.instance.setPercent(name, value);
+            // --- BASIC MODIFIERS ---
+
+            lua.addLocalCallback('addMod', function(name:String, ?field:Int = -1) {
+                Manager.instance.addModifier(name, field);
             });
 
-            // 🔹 easeMod(name, beat, length, value, ease)
-            lua.addLocalCallback('easeMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
+            lua.addLocalCallback('setMod', function(name:String, value:Float, ?player:Int = -1, ?field:Int = -1) {
+                Manager.instance.setPercent(name, value, player, field);
+            });
+
+            lua.addLocalCallback('getMod', function(name:String, ?player:Int = 0, ?field:Int = 0):Float {
+                return Manager.instance.getPercent(name, player, field);
+            });
+
+            lua.addLocalCallback('resetMod', function(name:String) {
+                Manager.instance.setPercent(name, 0);
+            });
+
+            // --- EVENTS / EASING ---
+
+            lua.addLocalCallback('setModAtBeat', function(name:String, beat:Float, value:Float, ?player:Int = -1, ?field:Int = -1) {
+                Manager.instance.set(name, beat, value, player, field);
+            });
+
+            lua.addLocalCallback('easeMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear", ?player:Int = -1, ?field:Int = -1) {
                 var easeFunc = Reflect.field(FlxEase, ease);
                 if (easeFunc == null) easeFunc = FlxEase.linear;
-                Manager.instance.ease(name, beat, length, value, easeFunc);
+                Manager.instance.ease(name, beat, length, value, easeFunc, player, field);
             });
 
-            // 🔹 addMod(name, beat, length, value, ease)
-            lua.addLocalCallback('addMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear") {
+            lua.addLocalCallback('addEaseMod', function(name:String, beat:Float, length:Float, value:Float, ease:String = "linear", ?player:Int = -1, ?field:Int = -1) {
                 var easeFunc = Reflect.field(FlxEase, ease);
                 if (easeFunc == null) easeFunc = FlxEase.linear;
-                Manager.instance.add(name, beat, length, value, easeFunc);
+                Manager.instance.add(name, beat, length, value, easeFunc, player, field);
             });
 
-            // 🔹 callbackMod(beat, functionName)
-            lua.addLocalCallback('callbackMod', function(beat:Float, funcName:String) {
+            // --- CALLBACKS / REPEATERS ---
+
+            lua.addLocalCallback('callbackMod', function(beat:Float, funcName:String, ?field:Int = -1) {
                 Manager.instance.callback(beat, function(e) {
                     if (lua != null && lua.functions != null && lua.functions.exists(funcName)) {
                         lua.call(funcName, []);
                     } else {
                         FlxG.log.warn("[ModchartLua] Tried to call missing Lua function: " + funcName);
                     }
-                });
+                }, field);
             });
 
-            // 🔹 resetMod(name)
-            lua.addLocalCallback('resetMod', function(name:String) {
-                Manager.instance.setPercent(name, 0);
+            lua.addLocalCallback('repeaterMod', function(beat:Float, length:Float, funcName:String, ?field:Int = -1) {
+                Manager.instance.repeater(beat, length, function(e) {
+                    if (lua != null && lua.functions != null && lua.functions.exists(funcName)) {
+                        lua.call(funcName, []);
+                    } else {
+                        FlxG.log.warn("[ModchartLua] Tried to call missing Lua function: " + funcName);
+                    }
+                }, field);
             });
 
-            FlxG.log.add("[ModchartLua] ✅ Registered modchart functions successfully!");
+            // --- PLAYFIELD UTILITY ---
+            lua.addLocalCallback('addPlayfield', function() {
+                Manager.instance.addPlayfield();
+            });
+
+            FlxG.log.add("[ModchartLua] ✅ Fully registered Modchart functions successfully!");
         } catch (e:Dynamic) {
-            FlxG.log.error("[ModchartLua] ❌ Error while registering: " + e);
+            FlxG.log.error("[ModchartLua] ❌ Error while registering Modchart functions: " + e);
         }
     }
 }
