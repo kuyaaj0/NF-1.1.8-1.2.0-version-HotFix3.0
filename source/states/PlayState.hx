@@ -834,17 +834,6 @@ class PlayState extends MusicBeatState
 		if (eventNotes.length < 1)
 			checkEventNote();
 			
-	// === Initialize Modchart Manager ===
-	if (Manager.instance == null)
-	{
-	    Manager.instance = new Manager();
-	    addManager(Manager.instance);
-	    
-	}
-	
-	// === Fire Lua / HScript Modchart Start ===
-	callOnLuas('onModchartStart', [Manager.instance]);
-	callOnHScript('onModchartStart', [Manager.instance]);
 	}
 
 	function set_songSpeed(value:Float):Float
@@ -1251,7 +1240,10 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			generateStaticArrows(1);
 
 
-			modchart = new Manager(); //目前版本的modchart有问题
+			if (Manager.instance == null)
+			Manager.instance = new Manager();
+
+			modchart = Manager.instance;
 			addManager(modchart);
 
 			for (i in 0...playerStrums.length)
@@ -2623,6 +2615,10 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 		callOnScripts('onUpdatePost', [elapsed]);
 		
+		// === Update Modchart Manager ===
+		if (Manager.instance != null)
+		Manager.instance.update(elapsed);
+
 		if (modchart != null)
 		modchart.update(elapsed);
 	}
