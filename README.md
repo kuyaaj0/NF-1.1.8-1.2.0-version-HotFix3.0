@@ -18,6 +18,11 @@
 </div>
 <br />
 
+# Tester Engine credits:
+| Avatar | Username | Involvement |
+| ------ | -------- | ----------- | 
+| ![](https://avatars.githubusercontent.com/u/105789304?v=4) | [Jay Tester](https://github.com/kuyaaj0) | Tester Gameplay and a little bit programmer for NF tester (NovaFlare) Engine.
+
 # NovaFlare crew credits:
 | Avatar | Username | Involvement |
 | ------ | -------- | ----------- | 
