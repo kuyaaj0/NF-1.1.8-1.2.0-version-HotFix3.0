@@ -7,8 +7,10 @@ import backend.animation.PsychAnimationController;
 import shaders.RGBPalette;
 import shaders.RGBPalette.RGBShaderReference;
 import shaders.ColorSwap;
+import flixel.addons.effects.FlxSkewedSprite;
 
-class StrumNote extends FlxSprite
+
+class StrumNote extends FlxSprite && FlxSkewedSprite
 {
 	public var rgbShader:RGBShaderReference;
 
