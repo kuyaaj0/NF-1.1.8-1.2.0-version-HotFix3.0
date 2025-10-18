@@ -1250,7 +1250,7 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			// === Link Modchart Lua Functions (Psych Adapter) ===
 		try
 		{
-			var adapter = modchart.backend.standalone.Adapter.instance;
+			var adapter = Adapter.instance;
 			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
 			{
 				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
