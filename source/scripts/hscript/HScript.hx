@@ -276,6 +276,11 @@ class HScript implements ISharedScript {
 		return false;
 	}
 
+	public function initMod(mod:modcharting.Modifier)
+{
+	call("initMod", [mod]);
+}
+
 	function preset(parent:Dynamic) {
 			// Some very commonly used classes
 			// set('Type', Type);
@@ -304,7 +309,7 @@ class HScript implements ISharedScript {
 	        set('Playfield', modcharting.Playfield);
 	        set('PlayfieldRenderer', modcharting.PlayfieldRenderer);
          	set('SimpleQuaternion', modcharting.SimpleQuaternion);
-         a	set('SustainStrip', modcharting.SustainStrip);
+         	set('SustainStrip', modcharting.SustainStrip);
 			set('FlxSprite', flixel.FlxSprite);
 			set('FlxText', flixel.text.FlxText);
 			set('FlxCamera', flixel.FlxCamera);
