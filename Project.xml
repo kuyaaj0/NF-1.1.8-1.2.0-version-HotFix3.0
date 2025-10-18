@@ -140,6 +140,10 @@
 	<!-- ModChart Specific-->
 	<haxedef name="FM_ENGINE" value="PSYCH"/>
 	<haxedef name="FM_ENGINE_VERSION" value="0.7"/>
+	<!--Set this to the engine you're using!-->
+	<define name="PSYCH" />
+	<haxelib name="fnf-modcharting-tools" />
+		
 
 	<haxelib name="modcharts" />
 	<haxeflag name="--macro" value="modchart.backend.macros.Macro.includeFiles()"/>
