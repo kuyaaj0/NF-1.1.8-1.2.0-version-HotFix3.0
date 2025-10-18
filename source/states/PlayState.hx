@@ -820,6 +820,17 @@ class PlayState extends MusicBeatState
 		setOnScripts('mania', SONG.mania);
 
 		stagesFunc(function(stage:BaseStage) stage.createPost());
+
+		var backupGpu:Bool;
+		backupGpu = ClientPrefs.data.cacheOnGPU;
+		ClientPrefs.data.cacheOnGPU = false;
+		//Add this before camfollow stuff and after strumLineNotes and notes have been made
+		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
+		playfieldRenderer.cameras = [camHUD];
+		noteGroup.add(playfieldRenderer);
+		noteGroup.add(grpNoteSplashes); /*place splashes in front (add this if the engine has splashes).
+		If you have added this: remove(or something) the add(grpNoteSplashes); which is by default below the add(strumLineNotes);*/
+		//being used in psych engine as an example
 		
 		callOnScripts('onCreatePost');
 
@@ -1238,6 +1249,8 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
+
+			NoteMovement.getDefaultStrumPos(this);
 
 			for (i in 0...playerStrums.length)
 			{
@@ -4533,6 +4546,8 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 	override function destroy()
 	{
+		ClientPrefs.data.cacheOnGPU = backupGpu;
+		
 		#if LUA_ALLOWED
 		for (lua in luaArray)
 		{
