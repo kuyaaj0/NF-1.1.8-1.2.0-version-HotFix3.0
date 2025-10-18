@@ -58,6 +58,7 @@ import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
 import modchart.Manager;
+import modchart.backend.Adapter;
 
 @:allow(backend.Replay)
 /**
@@ -1245,6 +1246,25 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 			modchart = Manager.instance;
 			addManager(modchart);
+			
+			// === Link Modchart Lua Functions (Psych Adapter) ===
+		try
+		{
+			var adapter = modchart.backend.Adapter.instance;
+			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
+			{
+				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
+				trace("[Modchart] ✅ Lua functions linked via Psych adapter!");
+			}
+			else
+			{
+				trace("[Modchart] ⚠️ Adapter missing setupLuaFunctions()");
+			}
+		}
+		catch (e:Dynamic)
+		{
+			trace("[Modchart] ❌ Failed to link Lua modchart functions: " + e);
+		}
 
 			for (i in 0...playerStrums.length)
 			{
