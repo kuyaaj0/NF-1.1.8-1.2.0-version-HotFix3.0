@@ -4586,11 +4586,6 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 		lastStepHit = curStep;
 		
-		// === Call Modchart Step Hooks ===
-		callOnLuas('onStepHit', [curStep]);
-		callOnHScript('onStepHit', [curStep]);
-
-		
 		setOnScripts('curStep', curStep);
 		callOnScripts('onStepHit');
 	}
@@ -4618,10 +4613,6 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 		super.beatHit();
 		lastBeatHit = curBeat;
-
-		// === Call Modchart Beat Hooks ===
-		callOnLuas('onBeatHit', [curBeat]);
-		callOnHScript('onBeatHit', [curBeat]);
 
 		setOnScripts('curBeat', curBeat);
 		callOnScripts('onBeatHit');
