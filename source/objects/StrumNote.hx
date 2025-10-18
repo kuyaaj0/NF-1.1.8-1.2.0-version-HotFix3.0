@@ -10,7 +10,7 @@ import shaders.ColorSwap;
 import flixel.addons.effects.FlxSkewedSprite;
 
 
-class StrumNote extends FlxSprite && FlxSkewedSprite
+class StrumNote extends FlxSkewedSprite
 {
 	public var rgbShader:RGBShaderReference;
 
