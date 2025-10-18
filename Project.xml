@@ -137,18 +137,10 @@
 	<!-- Mobile Specific-->
 	<haxelib name="extension-androidtools" if="android" />
 
-	<!-- ModChart Specific-->
-	<haxedef name="FM_ENGINE" value="PSYCH"/>
-	<haxedef name="FM_ENGINE_VERSION" value="0.7"/>
 	<!--Set this to the engine you're using!-->
 	<define name="PSYCH" />
 	<haxelib name="fnf-modcharting-tools" />
 	<define name="PSYCHVERSION" value="0.7.3"/>
-		
-		
-
-	<haxelib name="modcharts" />
-	<haxeflag name="--macro" value="modchart.backend.macros.Macro.includeFiles()"/>
 
 	<!--<haxelib name="hx-ios-uikit" if="ios" />-->
 	<haxedef name="SHARE_MOBILE_FILES" if="ios" />
