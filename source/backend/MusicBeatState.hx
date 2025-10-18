@@ -7,7 +7,7 @@ import backend.PsychCamera;
 import shaders.ColorblindFilter;
 import openfl.Lib;
 
-class MusicBeatState extends FlxUIState
+class MusicBeatState extends FlxUIState && modcharting.ModchartMusicBeatState
 {
 	public static var instance:MusicBeatState;
 
