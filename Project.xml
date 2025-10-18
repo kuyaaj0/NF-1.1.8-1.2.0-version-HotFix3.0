@@ -143,6 +143,8 @@
 	<!--Set this to the engine you're using!-->
 	<define name="PSYCH" />
 	<haxelib name="fnf-modcharting-tools" />
+	<define name="PSYCHVERSION" value="0.7.3"/>
+		
 		
 
 	<haxelib name="modcharts" />
