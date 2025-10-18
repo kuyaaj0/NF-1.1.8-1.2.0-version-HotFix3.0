@@ -57,8 +57,9 @@ import scripts.hscript.HScriptPack;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
-import modchart.Manager;
-import modchart.backend.standalone.Adapter;
+import modcharting.ModchartFuncs;
+import modcharting.NoteMovement;
+import modcharting.PlayfieldRenderer;
 
 @:allow(backend.Replay)
 /**
@@ -323,8 +324,6 @@ class PlayState extends MusicBeatState
 	public var luaVirtualPad:FlxVirtualPad;
 
 	var diffBotplay:Bool;
-	
-	public var modchart:Manager;
 
 	public function new()
 	{
@@ -1240,32 +1239,6 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 
-
-			if (Manager.instance == null)
-			Manager.instance = new Manager();
-
-			modchart = Manager.instance;
-			addManager(modchart);
-			
-			// === Link Modchart Lua Functions (Psych Adapter) ===
-		try
-		{
-			var adapter = Adapter.instance;
-			if (adapter != null && Reflect.hasField(adapter, "setupLuaFunctions"))
-			{
-				Reflect.callMethod(adapter, Reflect.field(adapter, "setupLuaFunctions"), []);
-				trace("[Modchart] ✅ Lua functions linked via Psych adapter!");
-			}
-			else
-			{
-				trace("[Modchart] ⚠️ Adapter missing setupLuaFunctions()");
-			}
-		}
-		catch (e:Dynamic)
-		{
-			trace("[Modchart] ❌ Failed to link Lua modchart functions: " + e);
-		}
-
 			for (i in 0...playerStrums.length)
 			{
 				setOnScripts('defaultPlayerStrumX' + i, playerStrums.members[i].x);
@@ -1297,8 +1270,8 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 			}
 			moveCameraSection();
 			
-			callOnLuas('onModChartStart', [modchart]);
-            callOnHScript('onModChartStart', [modchart]);
+			//callOnLuas('onModChartStart', [modchart]);
+            //callOnHScript('onModChartStart', [modchart]);
             
 
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000 / playbackRate, function(tmr:FlxTimer)
@@ -1401,13 +1374,13 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 	}
 
 	
-	public function addManager(obj:Manager)
+	/*public function addManager(obj:Manager)
 	{
 		if (obj.playfields == null || obj.playfields.length == 0)
 			return;
 
 		add(obj);
-	}
+	}*/
 
 	public function clearNotesBefore(time:Float)
 	{
