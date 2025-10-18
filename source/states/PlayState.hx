@@ -2621,12 +2621,6 @@ public function startVideo(name:String, forMidSong:Bool = false, canSkip:Bool = 
 
 		callOnScripts('onUpdatePost', [elapsed]);
 		
-		// === Update Modchart Manager ===
-		if (Manager.instance != null)
-		Manager.instance.update(elapsed);
-
-		if (modchart != null)
-		modchart.update(elapsed);
 	}
 
 	public function scoreTxtUpdate()
