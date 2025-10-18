@@ -822,7 +822,7 @@ class PlayState extends MusicBeatState
 		stagesFunc(function(stage:BaseStage) stage.createPost());
 
 		var backupGpu = ClientPrefs.data.cacheOnGPU;
-		ClientPrefs.data.cacheOnGPU = backupGpu;
+		ClientPrefs.data.cacheOnGPU = false;
 		//Add this before camfollow stuff and after strumLineNotes and notes have been made
 		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
 		playfieldRenderer.cameras = [camHUD];
@@ -843,6 +843,8 @@ class PlayState extends MusicBeatState
 
 		if (eventNotes.length < 1)
 			checkEventNote();
+
+		ClientPrefs.data.cacheOnGPU = backupGpu;
 			
 	}
 
