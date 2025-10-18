@@ -325,6 +325,8 @@ class PlayState extends MusicBeatState
 
 	var diffBotplay:Bool;
 
+	var backupGpu:Bool = false;
+
 	public function new()
 	{
 		super();
@@ -843,8 +845,6 @@ class PlayState extends MusicBeatState
 
 		if (eventNotes.length < 1)
 			checkEventNote();
-
-		ClientPrefs.data.cacheOnGPU = backupGpu;
 			
 	}
 
