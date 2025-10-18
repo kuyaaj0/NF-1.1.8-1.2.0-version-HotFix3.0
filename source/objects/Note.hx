@@ -1,5 +1,6 @@
 package objects;
 
+import flixel.addons.effects.FlxSkewedSprite;
 import backend.extraKeys.ExtraKeysHandler;
 import backend.animation.PsychAnimationController;
 import backend.NoteTypesConfig;
@@ -9,6 +10,7 @@ import shaders.RGBPalette.RGBShaderReference;
 import states.editors.EditorPlayState;
 import objects.StrumNote;
 import flixel.math.FlxRect;
+
 
 using StringTools;
 
@@ -38,7 +40,7 @@ typedef NoteSplashData =
  * 
  * If you want to make a custom note type, you should search for: "function set_noteType"
 **/
-class Note extends FlxSprite
+class Note extends FlxSprite && FlxSkewedSprite
 {
 	// This is needed for the hardcoded note types to appear on the Chart Editor,
 	// It's also used for backwards compatibility with 0.1 - 0.3.2 charts.
@@ -63,6 +65,10 @@ class Note extends FlxSprite
 	public var wasGoodHit:Bool = false;
 	public var missed:Bool = false;
 
+	//add these 2 variables for the renderer
+	public var mesh:modcharting.SustainStrip = null;
+	public var z:Float = 0;
+	
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
 	public var noteWasHit:Bool = false;
