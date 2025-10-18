@@ -59,11 +59,11 @@
       "version": "1.0.0"
     },
     {
-      "name": "modcharting-tools",
+      "name": "FNF-Modcharting-Tools",
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/2JENO/FNF-Modcharting-Tools"
+      "url": "https://github.com/2JENO/FNF-Modcharting-Tools/tree/main"
     },
     {
       "name": "hxcpp",
