@@ -1,6 +1,7 @@
 #if LUA_ALLOWED
 package scripts.lua;
 
+import modcharting.ModchartFuncs; //to fix any crash lmao
 import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
@@ -41,6 +42,7 @@ class FunkinLua
 	public var scriptName:String = '';
 	public var modFolder:String = null;
 	public var closed:Bool = false;
+	public static var instance:FunkinLua = null;
 
 	#if HSCRIPT_ALLOWED
 	public var hscriptBase:HScriptBase = null;
@@ -56,8 +58,6 @@ class FunkinLua
 		var times:Float = Date.now().getTime();
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
-
-		ModchartLua.implement(lua);
 
 		// trace('Lua version: ' + Lua.version());
 		// trace("LuaJIT version: " + Lua.versionJIT());
@@ -1836,6 +1836,7 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
+		ModchartFuncs.loadLuaFunctions(this);
 
 		try
 		{
