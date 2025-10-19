@@ -1841,7 +1841,13 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
-		ModchartFuncs.loadLuaFunctions(this);
+		// Delay modchart functions until PlayState is fully ready
+		FlxG.signals.postStateSwitch.add(function() {
+		if (FlxG.state is states.PlayState) {
+        ModchartFuncs.loadLuaFunctions(this);
+    }
+});
+		
 
 		try
 		{
