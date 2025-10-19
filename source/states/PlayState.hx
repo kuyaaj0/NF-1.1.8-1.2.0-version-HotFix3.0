@@ -713,6 +713,12 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		noteGroup.add(strumLineNotes);
 
+		var backupGpu = ClientPrefs.data.cacheOnGPU;
+		ClientPrefs.data.cacheOnGPU = false;
+		
+		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
+		noteGroup.add(playfieldRenderer);
+
 		NoteSplash.init();
 		var splash:NoteSplash = new NoteSplash(100, 100);
 		splash.setupNoteSplash(100, 100);
@@ -752,6 +758,7 @@ class PlayState extends MusicBeatState
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
 		comboGroup.cameras = [camHUD];
+		playfieldRenderer.cameras = [camHUD];
 
 		startingSong = true;
 
@@ -823,13 +830,9 @@ class PlayState extends MusicBeatState
 
 		stagesFunc(function(stage:BaseStage) stage.createPost());
 
-		var backupGpu = ClientPrefs.data.cacheOnGPU;
-		ClientPrefs.data.cacheOnGPU = false;
 		//Add this before camfollow stuff and after strumLineNotes and notes have been made
-		playfieldRenderer = new PlayfieldRenderer(strumLineNotes, notes, this);
-		playfieldRenderer.cameras = [camHUD];
-		noteGroup.add(playfieldRenderer);
-		noteGroup.add(grpNoteSplashes); /*place splashes in front (add this if the engine has splashes).
+		
+		 /*place splashes in front (add this if the engine has splashes).
 		If you have added this: remove(or something) the add(grpNoteSplashes); which is by default below the add(strumLineNotes);*/
 		//being used in psych engine as an example
 		
