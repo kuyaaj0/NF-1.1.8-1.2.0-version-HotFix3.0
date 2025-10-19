@@ -1832,6 +1832,7 @@ class FunkinLua
 		#if DISCORD_ALLOWED DiscordClient.addLuaCallbacks(this); #end
 		#if HSCRIPT_ALLOWED
 		HScriptBase.implement(this);
+		modcharting.ModchartFuncs.loadHScriptFunctions(this);
 		#end
 		#if ACHIEVEMENTS_ALLOWED Achievements.addLuaCallbacks(this); #end
 		#if flxanimate FlxAnimateFunctions.implement(this); #end
