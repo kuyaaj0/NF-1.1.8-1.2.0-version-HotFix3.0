@@ -43,6 +43,11 @@ class FunkinLua
 	public var modFolder:String = null;
 	public var closed:Bool = false;
 	public static var instance:FunkinLua = null;
+	#if (DISCORD_ALLOWED && desktop)
+	DiscordClient.addLuaCallbacks(this);
+	#elseif (android || mobile)
+	// Do nothing — Discord not supported
+	#end
 
 	#if HSCRIPT_ALLOWED
 	public var hscriptBase:HScriptBase = null;
