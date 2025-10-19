@@ -713,6 +713,8 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
 		noteGroup.add(strumLineNotes);
 
+		generateSong(SONG.song);
+
 		var backupGpu = ClientPrefs.data.cacheOnGPU;
 		ClientPrefs.data.cacheOnGPU = false;
 		
@@ -728,8 +730,6 @@ class PlayState extends MusicBeatState
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
-
-		generateSong(SONG.song);
 
 		KeyboardViewer = new KeyboardViewer(ClientPrefs.data.comboOffset[4], ClientPrefs.data.comboOffset[5]);
 		KeyboardViewer.antialiasing = ClientPrefs.data.antialiasing;
