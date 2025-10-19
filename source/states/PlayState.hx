@@ -37,6 +37,9 @@ import substates.PauseSubState;
 import substates.GameOverSubstate;
 import substates.ResultsScreen;
 import shaders.ErrorHandledShader;
+import modcharting.ModchartFuncs;
+import modcharting.NoteMovement;
+import modcharting.PlayfieldRenderer;
 #if CUSTOM_SHADERS_ALLOWED
 import shaders.CustomShaders;
 import shaders.openfl.filters.ShaderFilter as CustomShaderFilter;
@@ -57,9 +60,6 @@ import scripts.hscript.HScriptPack;
 import crowplexus.hscript.Expr.Error as IrisError;
 import crowplexus.hscript.Printer;
 #end
-import modcharting.ModchartFuncs;
-import modcharting.NoteMovement;
-import modcharting.PlayfieldRenderer;
 
 @:allow(backend.Replay)
 /**
