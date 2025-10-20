@@ -64,10 +64,6 @@ class Note extends FlxSkewedSprite
 
 	public var wasGoodHit:Bool = false;
 	public var missed:Bool = false;
-
-	//add these 2 variables for the renderer
-	public var mesh:modcharting.SustainStrip = null;
-	public var z:Float = 0;
 	
 	public var ignoreNote:Bool = false;
 	public var hitByOpponent:Bool = false;
@@ -125,7 +121,11 @@ class Note extends FlxSkewedSprite
 		a: ClientPrefs.data.splashAlpha
 	};
 
-	public var trackedScale:Float = 0.7; // PsychEK的箭头缩放似乎存在问题，尝试使用这个改善
+	public var trackedScale:Float = 0.7; // PsychEK的箭头缩放似乎存在问题，尝试使用这个改
+
+	//add these 2 variables for the renderer
+	public var mesh:modcharting.SustainStrip = null;
+	public var z:Float = 0;
 
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
