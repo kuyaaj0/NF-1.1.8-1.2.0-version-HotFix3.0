@@ -59,7 +59,7 @@ class FunkinLua
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
 
-		#if (DISCORD_ALLOWED && desktop && android)
+		#if (DISCORD_ALLOWED && desktop)
 		DiscordClient.addLuaCallbacks(this);
 		#elseif (android || mobile)
 		// Do nothing — Discord not supported
