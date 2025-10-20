@@ -293,6 +293,8 @@ class HScript implements ISharedScript {
 			set("Json", haxe.Json);
 			set('FlxG', flixel.FlxG);
 			set('FlxMath', flixel.math.FlxMath);
+		    set('Math', Math);
+		    set('math', Math);
 		    set('ModchartEditorState', modcharting.ModchartEditorState);
 		    set('ModchartEvent', modcharting.ModchartEvent);
 		    set('ModchartEventManager', modcharting.ModchartEventManager);
