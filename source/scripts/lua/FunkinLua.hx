@@ -66,7 +66,6 @@ class FunkinLua
 		#end
 
 		// Delay modchart functions until PlayState is fully ready
-        ModchartFuncs.loadLuaFunctions(this);
 
 		// trace('Lua version: ' + Lua.version());
 		// trace("LuaJIT version: " + Lua.versionJIT());
@@ -77,6 +76,8 @@ class FunkinLua
 		var game:PlayState = PlayState.instance;
 		if (game != null)
 			game.luaArray.push(this);
+
+		ModchartFuncs.loadLuaFunctions(this);
 
 		var myFolder:Array<String> = this.scriptName.split('/');
 		#if MODS_ALLOWED
