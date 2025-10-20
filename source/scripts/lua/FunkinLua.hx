@@ -43,11 +43,6 @@ class FunkinLua
 	public var modFolder:String = null;
 	public var closed:Bool = false;
 	public static var instance:FunkinLua = null;
-	#if (DISCORD_ALLOWED && desktop)
-	DiscordClient.addLuaCallbacks(this);
-	#elseif (android || mobile)
-	// Do nothing — Discord not supported
-	#end
 
 	#if HSCRIPT_ALLOWED
 	public var hscriptBase:HScriptBase = null;
@@ -63,6 +58,15 @@ class FunkinLua
 		var times:Float = Date.now().getTime();
 		lua = LuaL.newstate();
 		LuaL.openlibs(lua);
+
+		#if (DISCORD_ALLOWED && desktop && android)
+		DiscordClient.addLuaCallbacks(this);
+		#elseif (android || mobile)
+		// Do nothing — Discord not supported
+		#end
+
+		// Delay modchart functions until PlayState is fully ready
+        ModchartFuncs.loadLuaFunctions(this);
 
 		// trace('Lua version: ' + Lua.version());
 		// trace("LuaJIT version: " + Lua.versionJIT());
@@ -1842,12 +1846,6 @@ class FunkinLua
 		CustomSubstate.implement(this);
 		ShaderFunctions.implement(this);
 		DeprecatedFunctions.implement(this);
-		// Delay modchart functions until PlayState is fully ready
-		FlxG.signals.postStateSwitch.add(function() {
-		if (FlxG.state is states.PlayState) {
-        ModchartFuncs.loadLuaFunctions(this);
-    }
-});
 		
 
 		try
